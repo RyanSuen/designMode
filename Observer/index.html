@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="Observer.js"></script>
+</head>
+<body>
+    <button id="addNewObserver">Add new Observer checkbox</button>
+    <input id="mainCheckBox" type="checkBox"/>
+    <div id="observersContainer"></div>
+
+    <script>
+        var controlCheckBox = document.getElementById('mainCheckBox'),
+            addBtn = document.getElementById('addNewObserver'),
+            container = document.getElementById('observersContainer');
+
+        //具体目标 Subject:controlCheckBox
+        extend(new Subject(), controlCheckBox);
+
+        //点击checkbox会触发通知到观察者上
+        //？这里为什么要用Function, 有没有其它办法可以替换Function
+        controlCheckBox['onclick'] = new Function('controlCheckBox.Notify(controlCheckBox.checked)');
+
+        addBtn['onclick'] = AddNewObserver;
+
+        //具体观察者
+        function AddNewObserver() {
+            var check = document.createElement('input');
+            check.type = 'checkbox';
+            extend(new Observer(), check);
+
+            //重新定义更新行为
+            check.Update = function(value) {
+                this.checked = value;
+            }
+
+            //为主subject的观察者列表添加新的观察者
+            controlCheckBox.AddObserver(check);
+
+            container.appendChild(check);
+        }
+
+
+    </script>
+</body>
+</html>
